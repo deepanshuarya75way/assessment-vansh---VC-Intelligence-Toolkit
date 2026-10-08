@@ -16,14 +16,36 @@ class ReportType(str, enum.Enum):
 class Report(Base):
     __tablename__ = "reports"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    id: Mapped[int] = mapped_column(
+        primary_key=True,
+        index=True,
+    )
+
     candidate_id: Mapped[int] = mapped_column(
-        ForeignKey("candidates.id"), nullable=False, index=True
+        ForeignKey("candidates.id"),
+        nullable=False,
+        index=True,
     )
+
+    run_id: Mapped[int] = mapped_column(
+        ForeignKey("runs.id"),
+        nullable=False,
+        unique=True,
+        index=True,
+    )
+
     report_type: Mapped[ReportType] = mapped_column(
-        Enum(ReportType, name="report_type"), nullable=False
+        Enum(ReportType, name="report_type"),
+        nullable=False,
     )
-    content: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+
+    content: Mapped[dict[str, Any]] = mapped_column(
+        JSON,
+        nullable=False,
+    )
+
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now(), nullable=False
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False,
     )

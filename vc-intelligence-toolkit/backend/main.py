@@ -12,15 +12,21 @@ from app.api.navigator import router as navigator_router
 from app.api.reports import router as reports_router
 from app.core.config import settings
 from app.utils.logger import get_logger
+from app.database.checkpointer import init_checkpointer, close_checkpointer
 
 logger = get_logger(__name__)
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncGenerator[None, None]:
-    logger.info("VC Intelligence Toolkit backend starting")
+    logger.info("Together Intelligence Toolkit backend starting")
     logger.debug("Configured model: %s", settings.model_name)
+
+    await init_checkpointer()
+
     yield
+
+    await close_checkpointer()
 
 
 app = FastAPI(title="VC Intelligence Toolkit", lifespan=lifespan)
